@@ -30,6 +30,11 @@ class Image(models.Model):
         null=True)
     img = models.ImageField('Картинка', upload_to='', null=True, blank=True)
 
+    my_order = models.PositiveIntegerField('Порядок', default=1)
+
+    class Meta:
+        ordering = ['my_order']
+
     @property
     def get_absolute_image_url(self):
         return self.img.url
