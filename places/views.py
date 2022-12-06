@@ -3,11 +3,11 @@ import json
 from django.shortcuts import render, get_object_or_404
 from .models import Place, Image
 from django.http import HttpResponse
+from django.urls import reverse
 
 
 def index(request):
     features = []
-    detailsUrl = ['../static/moscow_legends.json', '../static/roofs24.json']
     all_places = Place.objects.all()
     for place in all_places:
         feature = {
@@ -19,7 +19,7 @@ def index(request):
                 "properties": {
                     "title": place.short_title,
                     "placeId": place.place_id,
-                    "detailsUrl": detailsUrl[0]
+                    "detailsUrl": reverse('place-detail', args=(place.id, ))
                 }
                 }
         features.append(feature)
@@ -33,7 +33,7 @@ def index(request):
     return render(request, "index.html", context=context)
 
 
-def get_json_api(request, place_id):
+def get_place_detail(request, place_id):
     place = get_object_or_404(Place, id=place_id)
     place_imgs = place.images.all()
     context = {
@@ -46,7 +46,6 @@ def get_json_api(request, place_id):
             "lat": place.lat
         }
     }
-
     return HttpResponse(
         json.dumps(context, ensure_ascii=False, indent=2),
         content_type="application/json"
