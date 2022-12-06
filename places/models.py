@@ -1,8 +1,17 @@
 from django.db import models
+from where_to_go import settings
 
 
 class Place(models.Model):
     title = models.CharField('Название места', max_length=150)
+    short_title = models.CharField(
+        'Короткое название',
+        max_length=70,
+        null=True)
+    place_id = models.CharField(
+        'Уникальный идентификатор',
+        max_length=50,
+        null=True)
     description_short = models.TextField('Короткое описание')
     description_long = models.TextField('Длинное описание')
     lng = models.FloatField('Долгота', null=True)
@@ -20,6 +29,10 @@ class Image(models.Model):
         on_delete=models.SET_NULL,
         null=True)
     img = models.ImageField('Картинка', upload_to='', null=True, blank=True)
+
+    @property
+    def get_absolute_image_url(self):
+        return self.img.url
 
     def __str__(self):
         return f'{self.id} {self.place}'

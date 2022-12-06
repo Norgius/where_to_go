@@ -22,5 +22,6 @@ from places import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index)
+    path('', views.index),
+    path('places/<int:place_id>/', views.get_json_api)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
