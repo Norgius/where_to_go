@@ -21,12 +21,11 @@ class ImageInline(SortableInlineAdminMixin, admin.TabularInline):
 class PlaceAdmin(admin.ModelAdmin):
     list_display = ['title']
     inlines = [ImageInline, ]
-
+    search_fields = ['title']
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     readonly_fields = ['place_img', ]
-
     def place_img(self, obj):
         return mark_safe('<img src="{url}" height={height} />'.format(
             url = obj.img.url,
