@@ -1,9 +1,9 @@
 import json
 
 from django.shortcuts import render, get_object_or_404
-from .models import Place, Image
 from django.http import HttpResponse
 from django.urls import reverse
+from .models import Place
 
 
 def index(request):
@@ -17,7 +17,7 @@ def index(request):
                     "coordinates": [place.lng, place.lat]
                 },
                 "properties": {
-                    "title": place.short_title,
+                    "title": place.title,
                     "placeId": place.place_id,
                     "detailsUrl": reverse('place-detail', args=(place.id, ))
                 }
