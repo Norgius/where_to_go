@@ -3,11 +3,12 @@ from tinymce.models import HTMLField
 
 
 class Place(models.Model):
-    title = models.CharField('Название места', max_length=150)
+    title = models.CharField('Название места', max_length=150, unique=True)
     place_id = models.CharField(
         'Уникальный идентификатор',
         max_length=50,
-        null=True)
+        null=True,
+        unique=True)
     description_short = models.TextField('Короткое описание')
     description_long = HTMLField('Длинное описание')
     lng = models.FloatField('Долгота', null=True)
@@ -24,7 +25,17 @@ class Image(models.Model):
         related_name='images',
         on_delete=models.SET_NULL,
         null=True)
-    img = models.ImageField('Картинка', upload_to='', null=True, blank=True)
+    img = models.ImageField(
+        'Картинка',
+        upload_to='',
+        null=True,
+        blank=True)
+    imagetitle = models.CharField(
+        'Название изображения',
+        max_length=70,
+        null=True,
+        unique=True,
+        )
     my_order = models.PositiveIntegerField('Порядок', default=1)
 
     class Meta:
