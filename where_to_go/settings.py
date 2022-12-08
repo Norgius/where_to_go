@@ -125,7 +125,12 @@ STATIC_URL = env.str('STATIC_URL', '/static/')
 
 MEDIA_URL = env.str('MEDIA_URL', '/media/')
 
-STATIC_ROOT = env.str('STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),
+    ]
+else:
+    STATIC_ROOT = env.str('STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
 
 MEDIA_ROOT = env.str('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 
