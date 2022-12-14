@@ -1,10 +1,10 @@
 import os
 import sys
-import hashlib
-from io import BytesIO
+from hashlib import md5
 from urllib.parse import urlsplit
 
 from django.core.management.base import BaseCommand
+from django.core.files.base import ContentFile
 import requests
 from places.models import Place, Image
 
@@ -35,9 +35,6 @@ class Command(BaseCommand):
                     'description_long': data_json.get('description_long'),
                     'lng': data_json.get('coordinates').get('lng'),
                     'lat': data_json.get('coordinates').get('lat'),
-                    'place_id': hashlib.md5(
-                        data_json.get('title').encode()
-                        ).hexdigest()
                 }
             )
             place = place if place else new_place
@@ -46,16 +43,11 @@ class Command(BaseCommand):
             return
         for image_link in images_links:
             try:
-                imagetitle = get_imagetitle(image_link)
                 response = requests.get(image_link)
                 response.raise_for_status()
                 content = response.content
-                image, new_image = Image.objects.get_or_create(
-                    place=place,
-                    imagetitle=imagetitle,
-                )
-                if new_image:
-                    image.img.save(imagetitle, BytesIO(content), save=True)
+                content_img = ContentFile(content, name=md5(content).hexdigest())
+                Image.objects.create(place=place, img=content_img)
             except requests.exceptions.HTTPError as http_er:
                 sys.stderr.write(
                     f'\n Ошибка загрузки изображения\n{http_er}\n\n')
