@@ -13,7 +13,7 @@ build/
 develop-eggs/
 dist/
 downloads/
-
+media/
 images/
 eggs/
 .eggs/
