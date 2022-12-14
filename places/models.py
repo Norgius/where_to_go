@@ -21,20 +21,10 @@ class Image(models.Model):
         on_delete=models.SET_NULL,
         null=True)
     img = models.ImageField('Картинка')
-    imagetitle = models.CharField(
-        'Название изображения',
-        max_length=70,
-        null=True,
-        unique=True,
-        )
-    my_order = models.PositiveIntegerField('Порядок', default=1)
+    order = models.PositiveIntegerField('Порядок', default=1)
 
     class Meta:
-        ordering = ['my_order']
-
-    @property
-    def get_absolute_image_url(self):
-        return self.img.url
+        ordering = ['order']
 
     def __str__(self):
         return f'{self.id} {self.place}'
