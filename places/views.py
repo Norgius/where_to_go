@@ -38,7 +38,7 @@ def get_place_detail(request, id):
     place_imgs = place.images.all()
     context = {
         "title": place.title,
-        "imgs": [image.get_absolute_image_url for image in place_imgs],
+        "imgs": [image.img.url for image in place_imgs],
         "description_short": place.description_short,
         "description_long": place.description_long,
         "coordinates": {
