@@ -18,7 +18,7 @@ def index(request):
                 },
                 "properties": {
                     "title": place.title,
-                    "placeId": place.place_id,
+                    "placeId": place.id,
                     "detailsUrl": reverse('place-detail', args=(place.id, ))
                 }
                 }
@@ -33,8 +33,8 @@ def index(request):
     return render(request, "index.html", context=context)
 
 
-def get_place_detail(request, place_id):
-    place = get_object_or_404(Place, id=place_id)
+def get_place_detail(request, id):
+    place = get_object_or_404(Place, id=id)
     place_imgs = place.images.all()
     context = {
         "title": place.title,
