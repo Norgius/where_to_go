@@ -27,6 +27,7 @@ class Command(BaseCommand):
                 response = requests.get(image_link)
                 response.raise_for_status()
                 content = response.content
+
                 content_img = ContentFile(
                     content,
                     name=md5(content).hexdigest(),
@@ -44,6 +45,7 @@ class Command(BaseCommand):
             response.raise_for_status()
             data_json = response.json()
             images_links = data_json.get('imgs')
+
             place, new_place = Place.objects.get_or_create(
                 title=data_json.get('title'),
                 defaults={
@@ -57,5 +59,6 @@ class Command(BaseCommand):
         except requests.exceptions.HTTPError as http_er:
             sys.stderr.write(f'\n Ошибка загрузки json-файла.\n{http_er}\n\n')
             return
+
         self.download_place_images(place, images_links)
         sys.stdout.write(f'\n{place.title} добавлено в БД.\n')
