@@ -33,8 +33,8 @@ def index(request):
     return render(request, "index.html", context=context)
 
 
-def get_place_detail(request, id):
-    place = get_object_or_404(Place, id=id)
+def get_place_detail(request, identifier):
+    place = get_object_or_404(Place, id=identifier)
     place_imgs = place.images.all()
     context = {
         "title": place.title,

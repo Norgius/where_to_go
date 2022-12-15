@@ -35,5 +35,9 @@ urlpatterns = [
     ),
     path('admin/', admin.site.urls),
     path('', views.index),
-    path('places/<int:id>/', views.get_place_detail, name='place-detail')
+    path(
+        'places/<int:identifier>/',
+        views.get_place_detail,
+        name='place-detail',
+    ),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
