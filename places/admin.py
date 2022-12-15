@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Place, Image
-from django.utils.safestring import mark_safe
 from adminsortable2.admin import SortableInlineAdminMixin
+from places.download_tools import show_image
 
 
 class ImageInline(SortableInlineAdminMixin, admin.TabularInline):
@@ -9,12 +9,8 @@ class ImageInline(SortableInlineAdminMixin, admin.TabularInline):
     raw_id_fields = ('place', )
     readonly_fields = ['place_img', ]
 
-    def place_img(self, obj):
-        return mark_safe('<img src="{url}" height={height} />'.format(
-            url=obj.img.url,
-            height='200px',
-            )
-        )
+    def place_img(self, image):
+        return show_image(image)
 
 
 @admin.register(Place)
@@ -29,8 +25,4 @@ class ImageAdmin(admin.ModelAdmin):
     readonly_fields = ['place_img', ]
 
     def place_img(self, image):
-        return mark_safe('<img src="{url}" height={height} />'.format(
-            url=image.img.url,
-            height='200px',
-            )
-        )
+        return show_image(image)
