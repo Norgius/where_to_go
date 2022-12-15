@@ -43,21 +43,29 @@ class Command(BaseCommand):
         try:
             response = requests.get(link)
             response.raise_for_status()
-            data_json = response.json()
-            images_links = data_json.get('imgs')
+            payload = response.json()
+            images_links = payload.get('imgs', [])
 
-            place, new_place = Place.objects.get_or_create(
-                title=data_json.get('title'),
+            place, created = Place.objects.get_or_create(
+                title=payload['title'],
                 defaults={
-                    'description_short': data_json.get('description_short'),
-                    'description_long': data_json.get('description_long'),
-                    'lng': data_json.get('coordinates').get('lng'),
-                    'lat': data_json.get('coordinates').get('lat'),
+                    'description_short': payload.get('description_short', ''),
+                    'description_long': payload.get('description_long', ''),
+                    'lng': payload.get('coordinates')['lng'],
+                    'lat': payload.get('coordinates')['lat'],
                 }
             )
-            place = place if place else new_place
-        except requests.exceptions.HTTPError as http_er:
-            sys.stderr.write(f'\n Ошибка загрузки json-файла.\n{http_er}\n\n')
+            place = place if place else created
+
+        except requests.exceptions.HTTPError as http_error:
+            sys.stderr.write(
+                f'\n Ошибка загрузки json-файла.\n{http_error}\n\n'
+            )
+            return
+        except KeyError as key_error:
+            sys.stderr.write(
+                f'\n Отсутствует обязательный ключ\n{key_error}\n\n'
+            )
             return
 
         self.download_place_images(place, images_links)
