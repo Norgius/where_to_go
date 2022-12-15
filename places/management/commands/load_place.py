@@ -21,6 +21,22 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('link', type=str, help='Ссылка на json-файл.')
 
+    def download_place_images(self, place, images_links):
+        for image_link in images_links:
+            try:
+                response = requests.get(image_link)
+                response.raise_for_status()
+                content = response.content
+                content_img = ContentFile(
+                    content,
+                    name=md5(content).hexdigest(),
+                )
+                Image.objects.create(place=place, img=content_img)
+            except requests.exceptions.HTTPError as http_er:
+                sys.stderr.write(
+                    f'\n Ошибка загрузки изображения\n{http_er}\n\n')
+                continue
+
     def handle(self, *args, **options):
         link = options.get('link')
         try:
@@ -41,18 +57,5 @@ class Command(BaseCommand):
         except requests.exceptions.HTTPError as http_er:
             sys.stderr.write(f'\n Ошибка загрузки json-файла.\n{http_er}\n\n')
             return
-        for image_link in images_links:
-            try:
-                response = requests.get(image_link)
-                response.raise_for_status()
-                content = response.content
-                content_img = ContentFile(
-                    content,
-                    name=md5(content).hexdigest(),
-                )
-                Image.objects.create(place=place, img=content_img)
-            except requests.exceptions.HTTPError as http_er:
-                sys.stderr.write(
-                    f'\n Ошибка загрузки изображения\n{http_er}\n\n')
-                continue
+        self.download_place_images(place, images_links)
         sys.stdout.write(f'\n{place.title} добавлено в БД.\n')
