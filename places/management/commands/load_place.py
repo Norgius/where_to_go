@@ -46,7 +46,10 @@ class Command(BaseCommand):
                 response = requests.get(image_link)
                 response.raise_for_status()
                 content = response.content
-                content_img = ContentFile(content, name=md5(content).hexdigest())
+                content_img = ContentFile(
+                    content,
+                    name=md5(content).hexdigest(),
+                )
                 Image.objects.create(place=place, img=content_img)
             except requests.exceptions.HTTPError as http_er:
                 sys.stderr.write(

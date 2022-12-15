@@ -20,15 +20,15 @@ def index(request):
                     "title": place.title,
                     "placeId": place.id,
                     "detailsUrl": reverse('place-detail', args=(place.id, ))
-                }
-                }
+                },
+        }
         features.append(feature)
 
-    context = {"saved_places": 
-        {
-        "type": "FeatureCollection",
-        "features": features
-        }
+    context = {
+        "saved_places": {
+            "type": "FeatureCollection",
+            "features": features,
+        },
     }
     return render(request, "index.html", context=context)
 
@@ -44,7 +44,7 @@ def get_place_detail(request, id):
         "coordinates": {
             "lng": place.lng,
             "lat": place.lat
-        }
+        },
     }
     return HttpResponse(
         json.dumps(context, ensure_ascii=False, indent=2),

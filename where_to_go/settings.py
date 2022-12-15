@@ -82,8 +82,11 @@ WSGI_APPLICATION = 'where_to_go.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': env.str('DATABASE_ENGINE', 'django.db.backends.sqlite3'),
-        'NAME': env.str('DATABASE_FILEPATH', os.path.join(BASE_DIR, 'db.sqlite3')),
-    }
+        'NAME': env.str(
+            'DATABASE_FILEPATH',
+            os.path.join(BASE_DIR, 'db.sqlite3'),
+        ),
+    },
 }
 
 # Password validation
@@ -91,16 +94,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.\
+            UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.\
+            MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.\
+            CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.\
+            NumericPasswordValidator',
     },
 ]
 
@@ -127,6 +134,7 @@ MEDIA_URL = env.str('MEDIA_URL', '/media/')
 STATICFILES_DIRS = [
     env.str('STATIC_ROOT', os.path.join(BASE_DIR, 'assets')),
 ]
+
 STATIC_ROOT = env.str('STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
 
 MEDIA_ROOT = env.str('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))

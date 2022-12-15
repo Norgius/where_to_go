@@ -23,8 +23,16 @@ from places import views
 
 
 urlpatterns = [
-    url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
-    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
+    url(
+        r'^media/(?P<path>.*)$',
+        serve,
+        {'document_root': settings.MEDIA_ROOT},
+    ),
+    url(
+        r'^static/(?P<path>.*)$',
+        serve,
+        {'document_root': settings.STATIC_ROOT},
+    ),
     path('admin/', admin.site.urls),
     path('', views.index),
     path('places/<int:id>/', views.get_place_detail, name='place-detail')
