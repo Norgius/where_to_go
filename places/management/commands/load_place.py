@@ -1,4 +1,3 @@
-import sys
 from hashlib import md5
 
 from django.core.management.base import BaseCommand
@@ -19,16 +18,16 @@ class Command(BaseCommand):
             try:
                 response = requests.get(image_link)
                 response.raise_for_status()
-                content = response.content
 
                 content_img = ContentFile(
-                    content,
-                    name=md5(content).hexdigest(),
+                    response.content,
+                    name=md5(response.content).hexdigest(),
                 )
                 Image.objects.create(place=place, img=content_img)
             except requests.exceptions.HTTPError as http_er:
-                sys.stderr.write(
-                    f'\n Ошибка загрузки изображения\n{http_er}\n\n')
+                self.stderr.write(self.style.ERROR(
+                    f'\n Ошибка загрузки изображения\n{http_er}\n\n'
+                ))
                 continue
 
     def handle(self, *args, **options):
@@ -48,18 +47,24 @@ class Command(BaseCommand):
                     'lat': payload.get('coordinates')['lat'],
                 }
             )
-            place = place if place else created
+            if not created:
+                self.stdout.write(
+                    self.style.WARNING(f'\n{place.title} уже есть в БД.\n')
+                )
+                return
 
         except requests.exceptions.HTTPError as http_error:
-            sys.stderr.write(
+            self.stderr.write(self.style.ERROR(
                 f'\n Ошибка загрузки json-файла.\n{http_error}\n\n'
-            )
+            ))
             return
         except KeyError as key_error:
-            sys.stderr.write(
+            self.stderr.write(self.style.ERROR(
                 f'\n Отсутствует обязательный ключ\n{key_error}\n\n'
-            )
+            ))
             return
 
         self.download_place_images(place, images_links)
-        sys.stdout.write(f'\n{place.title} добавлено в БД.\n')
+        self.stdout.write(
+            self.style.SUCCESS(f'\n{place.title} добавлено в БД.\n')
+        )
