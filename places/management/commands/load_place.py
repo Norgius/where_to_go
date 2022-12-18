@@ -1,17 +1,10 @@
-import os
 import sys
 from hashlib import md5
-from urllib.parse import urlsplit
 
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
 import requests
 from places.models import Place, Image
-
-
-def get_imagetitle(link):
-    parsed_link = urlsplit(link)
-    return os.path.split(parsed_link.path)[1]
 
 
 class Command(BaseCommand):
