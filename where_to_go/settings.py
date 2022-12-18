@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from textwrap import dedent
 from pathlib import Path
 import os
 from environs import Env
@@ -107,7 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-print(AUTH_PASSWORD_VALIDATORS[0]['NAME'])
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
